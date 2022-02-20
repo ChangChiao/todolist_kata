@@ -52,6 +52,29 @@ const requesListenser = (req, res) => {
   } else if (req.method === "OPTIONS") {
     res.writeHead(200, headers);
     res.end();
+  } else if (req.url.startsWith("/todos/") && req.method === "PATCH") {
+    req.on("end", () => {
+      try {
+        const { title } = JSON.parse(body);
+        const id = req.url.split("/").pop();
+        const index = todos.findIndex((item) => item.id === id);
+        if (title !== undefined && index !== -1) {
+          todos[index].title = title;
+          res.writeHead(200, headers);
+          res.write(
+            JSON.stringify({
+              status: "success",
+              data: todos,
+            })
+          );
+          res.end();
+        } else {
+          errorHandle(res, title === undefined ? "formatError" : "idNotExist");
+        }
+      } catch (error) {
+        errorHandle(res, "formatError");
+      }
+    });
   } else if (req.url === "/todos" && req.method === "DELETE") {
     todos.length = 0;
     res.writeHead(200, headers);
@@ -93,4 +116,4 @@ const requesListenser = (req, res) => {
 };
 
 const server = http.createServer(requesListenser);
-server.listen(8080);
+server.listen(process.env.PORT || 3005);
