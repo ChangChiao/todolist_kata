@@ -43,19 +43,43 @@ const requesListenser = (req, res) => {
           );
           res.end();
         } else {
-          errorHandle(res);
+          errorHandle(res, "paramLack");
         }
       } catch (error) {
-        errorHandle(res);
+        errorHandle(res, "formatError");
       }
     });
   } else if (req.method === "OPTIONS") {
     res.writeHead(200, headers);
     res.end();
-  } else if (req.url === "/" && req.method === "DELETE") {
+  } else if (req.url === "/todos" && req.method === "DELETE") {
+    todos.length = 0;
     res.writeHead(200, headers);
-    res.write(JSON.stringify());
+    res.write(
+      JSON.stringify({
+        status: "success",
+        data: todos,
+        delete: "ok",
+      })
+    );
     res.end();
+  } else if (req.url.startsWith("/todos/") && req.method === "DELETE") {
+    const id = req.url.split("/").pop();
+    const index = todos.findIndex((item) => item.id === id);
+    if (index !== -1) {
+      todos.splice(index, 1);
+      console.log("index", index);
+      res.writeHead(200, headers);
+      res.write(
+        JSON.stringify({
+          status: "success",
+          data: todos,
+        })
+      );
+      res.end();
+    } else {
+      errorHandle(res, "idNotExist");
+    }
   } else {
     res.writeHead(404, headers);
     res.write(
