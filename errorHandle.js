@@ -2,11 +2,10 @@ const headers = require("./headerConfig");
 const errorCode = require("./erroCode");
 
 function errorHandle(res, code) {
-  const status = code.substring(0, 3);
-  let errorMsg = erroCode["default"];
-  if (status) errorMsg = errorCode[status];
-  if (status && code) {
-    errorMsg = errorCode[status][code];
+  const status = code.toString().substring(0, 3);
+  let errorMsg = errorCode["default"];
+  if (code) {
+    errorMsg = errorCode[code];
   }
 
   let data = {
