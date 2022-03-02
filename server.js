@@ -43,10 +43,10 @@ const requesListenser = (req, res) => {
           );
           res.end();
         } else {
-          errorHandle(res, "paramLack");
+          errorHandle(res, 40001);
         }
       } catch (error) {
-        errorHandle(res, "formatError");
+        errorHandle(res, 40002);
       }
     });
   } else if (req.method === "OPTIONS") {
@@ -101,17 +101,10 @@ const requesListenser = (req, res) => {
       );
       res.end();
     } else {
-      errorHandle(res, "idNotExist");
+      errorHandle(res, 40003);
     }
   } else {
-    res.writeHead(404, headers);
-    res.write(
-      JSON.stringify({
-        status: "fail",
-        message: "無此頁面",
-      })
-    );
-    res.end();
+    errorHandle(res, 404);
   }
 };
 
