@@ -69,10 +69,10 @@ const requesListenser = (req, res) => {
           );
           res.end();
         } else {
-          errorHandle(res, title === undefined ? "formatError" : "idNotExist");
+          errorHandle(res, title === undefined ? 40001 : 40003);
         }
       } catch (error) {
-        errorHandle(res, "formatError");
+        errorHandle(res, 40002);
       }
     });
   } else if (req.url === "/todos" && req.method === "DELETE") {
